@@ -1,0 +1,5 @@
+student_id, student_name_first, student_name_last, student_job_type, student_phone_number, student_email, student_date_hire, student_date_graduate, student_shirt_size, student_notes
+
+01358308, 'Stephen', 'Reilly', 'manager', 9788688473, 'sreilly@umassd.edu', 2013-04-01, 2017-05-07, 'L', 'Best employee we've ever had.'
+
+__student_id, __student_name_first, __student_name_last, __student_job_type, __student_phone_number, __student_email, __student_date_hire, __student_date_graduate, __student_shirt_size, __student_notes
