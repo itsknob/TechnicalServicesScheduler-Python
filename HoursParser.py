@@ -2,6 +2,12 @@ from TechStuff import Event
 import re
 
 class FileParser:
+    """
+    Parser is custom tailored to format of hours email.
+
+    May not be able to catch deviations from the format.
+    Program should allow for entry of missing events.
+    """
 
     file_name = None
 

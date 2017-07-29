@@ -25,3 +25,6 @@ student_date_hire		-				TEXT - Datetime?
 student_date_graduate 	- 				TEXT - Datetime?
 student_shirt_size		-				TEXT
 student_notes			-				TEXT
+
+ALL CAN BE TEXT
+"""

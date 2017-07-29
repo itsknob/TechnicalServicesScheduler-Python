@@ -169,7 +169,7 @@ class Student:
     __student_id = None
     __student_name_first = None
     __student_name_last = None
-    __student_job_type = None
+    __student_job_type = EmployeeType
     __student_phone_number = None
     __student_email = None
     __student_date_hire = None
@@ -220,34 +220,34 @@ class Student:
         return self.__student_notes
 
 
-    def set_student_id(new_id):
+    def set_student_id(new_id: str):
         self.__student_id = new_id
 
-    def set_student_name_first(new_name_first):
+    def set_student_name_first(new_name_first: str):
         self.__student_name_first = new_name_first
 
-    def set_student_name_last(new_name_last):
+    def set_student_name_last(new_name_last: str):
         self.__student_name_last = new_name_last
 
-    def set_student_job_type(new_job_type):
+    def set_student_job_type(new_job_type: EmployeeType):
         self.__student_job_type = new_job_type
 
-    def set_student_phone_number(new_phone_number):
+    def set_student_phone_number(new_phone_number: str):
         self.__student_phone_number = new_phone_number
 
-    def set_student_email(new_email):
+    def set_student_email(new_email: str):
         self.__student_email = new_email
 
-    def set_student_date_hire(new_date_hire):
+    def set_student_date_hire(new_date_hire: str):
         self.__student_date_hire = new_date_hire
 
-    def set_student_date_graduate(new_date_graduate):
+    def set_student_date_graduate(new_date_graduate: str):
         self.__student_date_graduate = new_date_graduate
 
-    def set_student_shirt_size(new_shirt_size):
+    def set_student_shirt_size(new_shirt_size: str):
         self.__student_shirt_size = new_shirt_size
 
-    def set_student_notes(new_notes):
+    def set_student_notes(new_notes: str):
         self.__student_notes = new_notes
 
     def return_all_data_as_string(self):
@@ -258,7 +258,32 @@ class Student:
         return value_string
 
 class Student_Trainings():
-    """"""
+    """Contains information about trainings
 
-test = Student("01358308", 'Stephen', 'Reilly', 'manager', "9788688473", 'sreilly@umassd.edu', "2013-04-01", "2017-05-07", 'L', "Best employee we've ever had.")
-test.return_all_data_as_string()
+    Change to single dictionary in Student Class
+    """
+    student_id = str
+    training_aud_sound = False
+    training_aud_lights = False
+    training_mobile_sound = False
+    training_mobile_lights = False
+    training_stage_safety = False
+    training_commuter_cafe = False
+    training_woodland_commons = False
+    training_grand_reading_room = False
+    training_professionalism = False
+    training_x32 = False
+    training_sound_consoles = False
+    training_sound_design = False
+    training_amp_speaker_matching = False
+    training_advanced_ion = False
+    training_lighting_design = False
+    training_networking = False
+    training_equiptment_repair = False
+    training_scenery_shop = False
+
+    def __init__(student_id):
+        self.student_id = student_id
+
+    def complete_training(self, variable):
+        return self.variable.__owner__()
