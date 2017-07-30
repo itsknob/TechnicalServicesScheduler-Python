@@ -1,6 +1,5 @@
-import time as Time
+""" Used for creating Job Types"""
 from enum import Enum
-
 
 class EmployeeType(Enum):
     """Defines Job Types
@@ -27,6 +26,8 @@ class Employee:
     __employee_phone_number = None
     __employee_job_type = EmployeeType
 
+
+    """In order to reduce arguments, may need to create WorkInfo and PersonalInfo classes"""
     def __init__(self, name_first, name_last, s_id, e_id, email, phone_number, job_type: EmployeeType):
         self.__employee_name_first = name_first
         self.__employee_name_last = name_last
@@ -79,24 +80,7 @@ class Employee:
 
 
 class Event:
-    """Holds information about Events
-
-    Setters are strongly typed
-    """
-
-    # Variables Required on initialization
-    __event_name = None
-    __event_location = None
-    __event_date = None
-    __event_start_time = 0
-    __event_end_time = 0
-    __event_number_employees = 0
-    __event_req_manager = False
-
-    # Variables later initialized
-    __event_employee_list = []
-    __event_manager = None
-    # __event_length = None         # Later Contemplated
+    """Holds information about Events"""
 
     def __init__(self, name, location, date, start_time, end_time, number_employees, req_manager):
         self.__event_name = name
@@ -107,61 +91,71 @@ class Event:
         self.__event_number_employees = number_employees
         self.__event_req_manager = req_manager
 
-    def get_event_name(self):
-        return self.__event_name
+    @property
+    def event_name(self):
+        """Name of Event"""
+        return self.event_name
+    @event_name.setter
+    def event_name(self, new_name):
+        self.event_name = new_name
 
-    def get_event_location(self):
-        return self.__event_location
-
-    def get_event_date(self):
-        return self.__event_date
-
-    def get_event_start_time(self):
-        return self.__event_start_time
-
-    def get_event_end_time(self):
-        return self.__event_end_time
-
-    def get_event_number_employees(self):
-        return self.__event_number_employees
-
-    def get_event_req_manager(self):
-        return self.__event_req_manager
-
-    def set_event_name(self, new_name):
-        if not isinstance(new_name, str):
-            return TypeError
-        self.__event_name = new_name
-
-    def set_event_location(self, new_location):
-        if not isinstance(new_location, str):
-            return TypeError
+    @property
+    def event_location(self):
+        return self.event_location
+    @event_location.setter
+    def event_location(self, new_location):
         self.event_location = new_location
 
-    def set_event_date(self, new_date):
-        if not isinstance(new_date, str):
-            return TypeError
+    @property
+    def event_date(self):
+        return self.event_date
+    @event_date.setter
+    def event_date(self, new_date):
         self.event_date = new_date
 
-    def set_event_start_time(self, new_start_time):
-        if not isinstance(new_start_time, str):
-            return TypeError
+    @property
+    def event_start_time(self):
+        return self.event_start_time
+    @event_start_time.setter
+    def event_start_Time(self, new_start_time):
         self.event_start_time = new_start_time
 
-    def set_event_end_time(self, new_end_time):
-        if not isinstance(new_end_time, str):
-            return TypeError
+    @property
+    def event_end_time(self):
+        return self.event_end_time
+    @event_end_time.setter
+    def event_end_time(self, new_end_time):
         self.event_end_time = new_end_time
 
-    def set_event_number_employees(self, new_number_employees):
-        if not isinstance(new_number_employees, int):
-            return TypeError
-        self.event_number_employees = new_number_employees
+    @property
+    def event_number_employees(self):
+        return self.event_number_employees
+    @event_number_employees.setter
+    def event_number_employees(self, new_number):
+        self.event_number_employees = new_number
 
-    def set_event_req_manager(self, req_manager):
-        if not isinstance(req_manager, bool):
-            return TypeError
-        self.event_req_manager = req_manager
+    @property
+    def event_requires_manager(self):
+        return self.event_requires_manager
+    @event_requires_manager.setter
+    def event_requires_manager(self, new_requires):
+        self.event_requires_manager = new_requires
+
+
+    @property
+    def event_employee_list(self):
+        return self.event_employee_list
+    @event_employee_list.setter
+    def event_employee_list(self, new_employee_list):
+        self.event_employee_list = new_employee_list
+
+    @property
+    def event_manager(self):
+        return self.event_manager
+    @event_manager.setter
+    def event_manager(self, new_manager):
+        self.event_manager = new_manager
+
 
 class Student:
     """Contains information about student. Fields are private."""
