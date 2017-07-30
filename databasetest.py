@@ -39,10 +39,10 @@ connection.execute("""create table if not exists employees (student_id varchar(8
 											student_notes varchar(255))""")
 
 # sql_statement = """insert into employees (student_id, student_name_first, student_name_last, student_job_type, student_phone_number, student_email, student_date_hire, student_date_graduate, student_shirt_size, student_notes) values(01358308, 'Stephen', 'Reilly', 'manager', 9788688473, 'sreilly@umassd.edu', '2013-04-01', '2017-05-07', 'L', "Best employee we've ever had.")"""
-sql_fields = "student_id, student_name_first, student_name_last, student_job_type, student_phone_number, student_email, student_date_hire, student_date_graduate, student_shirt_size, student_notes"
-# sql_statement = "insert into employees ({}) values(?)".format(sql_fields), sql_values)
+sql_fields = (student_id, student_name_first, student_name_last, student_job_type, student_phone_number, student_email, student_date_hire, student_date_graduate, student_shirt_size, student_notes)
+connection.execute("insert into employees ({}) values(?)".format(sql_fields), sql_values)
 # print(sql_statement)
-sql_statement = "insert into employees ({0}) values({1})".format(sql_fields, sql_values)
+# sql_statement = "insert into employees ({0}) values({1})".format(sql_fields, sql_values)
 print(sql_statement)
 connection.execute(sql_statement)
 connection.commit()
