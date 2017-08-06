@@ -1,10 +1,12 @@
 """Student Handler Refactor"""
 import sqlite3
 import os.path
+from TechTypes import *
 
 
 class DatabaseHandler:
 
+	# May be moved elsewhere to be used as a first-run setup. IE __init__.py
 	def __init__(self):
 		# Config file exists
 		if os.path.isfile("config.txt"):
@@ -111,3 +113,25 @@ class DatabaseHandler:
 		connection = sqlite3.connect(database)
 		cursor = connection.cursor()
 		return connection, cursor
+
+	def add_new_student(self, new_student=Student):
+		student_info_list = new_student.return_all_info_as_list()
+		print(student_info_list)
+
+p = PersonalInformation()
+p.name_first = "Stephen"
+p.name_last = "Reilly"
+p.email = "stephencreilly7@gmail.com"
+p.phone_number = "9788688473"
+w = WorkInformation()
+w.student_id = "01358308"
+w.job_type = EmployeeType.MANAGER
+w.date_hire = "2013-04-01"
+w.date_graduate = "2017-05-13"
+w.shirt_size = "L"
+w.notes = "Great Employee"
+t = {"training_aud_sound": True, "training_aud_lights": True, "training_mobile_sound": True, "training_mobile_lights": True, "training_stage_safety": True, "training_commuter_cafe": True, "training_woodland_commons": True, "training_grand_reading_room": True, "training_professionalism": True, "training_x32": True, "training_sound_consoles": True, "training_sound_design": True, "training_amp_speaker_matching": True, "training_advanced_ion": True, "training_lighting_design": True, "training_networking": True, "training_equiptment_repair": True, "training_scenery_shop": True}
+s = Student(p, w, t)
+
+d = DatabaseHandler()
+d.add_new_student(s)
