@@ -121,7 +121,7 @@ class DatabaseHandler:
 		employee_info_list = new_employee.return_all_info_as_list()
 		employee_info_string = str()
 		for item in employee_info_list:
-			employee_info_string += "\'"+str(item)+"\', "
+			employee_info_string += "\""+str(item)+"\", "
 		# Strip trailing comma and space
 		employee_info_string = employee_info_string[:-2]
 		print(employee_info_string)
@@ -152,14 +152,17 @@ class DatabaseHandler:
 			w.note = row['employee_notes']
 
 			# Training Information to initialize new employee
-			training_query = "select * from training where student_id="+row['student_id']
+			training_query = "select * from trainings where student_id="+row['student_id']
 			cur.execute(training_query)
 			training_list = cur.fetchone()
 			# Initialize Employee
 			s = Employee(p, w, training_list)
 			employee_list.append(s)
 
+		print(employee_list)
+		return employee_list
 
+"""
 d = DatabaseHandler()
 
 p = PersonalInformation()
@@ -178,3 +181,55 @@ t = {"training_aud_sound": True, "training_aud_lights": True, "training_mobile_s
 e = Employee(p, w, t)
 
 d.add_new_employee(e)
+"""
+"""
+d = DatabaseHandler()
+
+t = {"training_aud_sound": False, "training_aud_lights": False, "training_mobile_sound": False, "training_mobile_lights": False, "training_stage_safety": False, "training_commuter_cafe": False, "training_woodland_commons": False, "training_grand_reading_room": False, "training_professionalism": False, "training_x32": False, "training_sound_consoles": False, "training_sound_design": False, "training_amp_speaker_matching": False, "training_advanced_ion": False, "training_lighting_design": False, "training_networking": False, "training_equiptment_repair": False, "training_scenery_shop": False}
+test_data_list = [["01355284", "Lisa", "Blubaugh", "lblubaugh@umassd.edu", "6175550139", "General Staff", "9/1/2014 0:00:00", "4/20/2017 0:00:00", "M", "I'm Lisa"],
+["01355226", "Sarah", "Brown", "sbrown12@umassd.edu", "6175550138", "MIT", "9/1/2016 0:00:00", "5/31/2019 0:00:00", "M", "I unplug things"],
+["01355227", "Gabii", "Barthe", "gbarthe@umassd.edu", "7742184892", "General Staff", "9/1/2013 0:00:00", "5/31/2017 0:00:00", "M", "I'm Gabii"],
+["01354896", "Rachel", "Brownell", "rbrownell@umassd.edu", "6175550193", "General Staff", "9/1/2014 0:00:00", "5/31/2017 0:00:00", "M", "I'm Rachel"],
+["01358796", "Nathaniel", "Cady", "ncady@umassd.edu", "6175550114", "General Staff", "9/1/2016 0:00:00", "5/31/2017 0:00:00", "M", "I'm Nate"],
+["01357943", "Victoria", "Carter", "vcarter@umassd.edu", "6175550114", "General Staff", "9/1/2014 0:00:00", "5/31/2017 0:00:00", "M", "I'm Tori"],
+["01348933", "Josh", "Casseus", "jcasseus@umassd.edu", "6175550181", "General Staff", "9/1/2016 0:00:00", "5/31/2019 0:00:00", "M", "I'm Josh"],
+["01358794", "Amandie", "Delva", "adelva@umassd.edu", "6175550104", "General Staff", "9/1/2016 0:00:00", "5/31/2020 0:00:00", "L", "I'm Amandie"],
+["01349758", "Amina", "Dualeh", "adualeh@umassd.edu", "6175550176", "General Staff", "9/1/2016 0:00:00", "5/31/2020 0:00:00", "M", "I'm Amina"],
+["00135178", "Patrick", "Gouveia", "pgouveia1@umassd.edu", "6175550171", "General Staff", "9/1/2014 0:00:00", "5/31/2018 0:00:00", "L", "I'm Pat"],
+["01358008", "Sarah", "Grasso", "sgrasso@umassd.edu", "6175550104", "General Staff", "9/1/2016 0:00:00", "5/31/2020 0:00:00", "S", "I'm Sarah"],
+["01346985", "Emily", "Hatstat", "ehatstat@umassd.edu", "6175550177", "MIT", "9/1/2016 0:00:00", "5/31/2019 0:00:00", "M", "I'm a dumbass"],
+["01321486", "Nicole", "Howell", "nhowell1@umassd.edu", "6175550119", "MIT", "9/1/2014 0:00:00", "5/31/2018 0:00:00", "L", "I'm Nicole"],
+["01354712", "Ross", "Jacques", "rjacques@umassd.edu", "6175550197", "General Staff", "9/1/2016 0:00:00", "5/31/2020 0:00:00", "L", "I'm Ross"],
+["01358913", "Christina", "Luby", "cluby@umassd.edu", "6175550177", "General Staff", "9/1/2016 0:00:00", "5/31/2020 0:00:00", "M", "I'm Christina"],
+["01354614", "Sara", "Mahan", "smahan@umassd.edu", "6175550126", "General Staff", "9/1/2014 0:00:00", "5/31/2019 0:00:00", "M", "I'm Sara"],
+["01347815", "Courtney", "Mitchell", "cmitchell@umassd.edu", "6175550112", "General Staff", "9/1/2016 0:00:00", "5/31/2020 0:00:00", "M", "I'm Cortney"],
+["01324816", "Marcus", "Nelson", "mnelson5@umassd.edu", "6175550178", "General Staff", "9/1/2014 0:00:00", "5/31/2018 0:00:00", "L", "I'm Marcus"],
+["01352417", "Linda", "Nguyen", "lnguyen@umassd.edu", "6175550110", "General Staff", "9/1/2016 0:00:00", "5/31/2020 0:00:00", "S", "I'm Linda"],
+["01326818", "Kyle", "Pacheco", "kpacheco@umassd.edu", "6175550195", "General Staff", "9/1/2016 0:00:00", "5/31/2019 0:00:00", "XL", "I'm Kyle"],
+["01357819", "Jay", "Patel", "jpatel@umassd.edu", "6175550107", "General Staff", "9/1/2016 0:00:00", "5/31/2018 0:00:00", "XL", "I'm Jay!"],
+["01345620", "Nolan", "Raymond", "nraymon@umassd.edu", "6175550185", "General Staff", "9/1/2013 0:00:00", "5/31/2017 0:00:00", "L", "I don't even work here"],
+["01369421", "Sofia", "Repuccia", "srepuccia@umassd.edu", "6175550132", "General Staff", "9/1/2013 0:00:00", "5/31/2017 0:00:00", "L", "I'm Sofia"],
+["01357823", "Seth", "Rossie", "srossie@umassd.edu", "6175550159", "General Staff", "9/1/2016 0:00:00", "5/31/2017 0:00:00", "L", "I'm Seth"],
+["01384624", "Ehasanuzzama", "Satu", "esatu@umassd.edu", "6175550173", "General Staff", "9/1/2016 0:00:00", "5/31/2017 0:00:00", "M", "I'm Satu"]]
+
+for employee in test_data_list:
+	p = PersonalInformation()
+	p.student_id = employee[0]
+	p.name_first = employee[1]
+	p.name_last = employee[2]
+	p.email = employee[3]
+	p.phone_number = employee[4]
+	w = WorkInformation()
+	if employee[5] == "MIT":
+		w.job_type = EmployeeType.MANAGER_IN_TRAINING
+	else:
+		w.job_type = EmployeeType.GENERAL
+	w.date_hire = employee[6]
+	w.date_graduate = employee[7]
+	w.shirt_size = employee[8]
+	w.notes = employee[9]
+	e = Employee(p, w, t)
+	d.add_new_employee(e)
+
+print("Completed Process")
+"""
