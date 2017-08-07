@@ -77,8 +77,11 @@ class MainApp(tk.Frame):
 
 		# Create a widget to hold list of employees
 		self.employee_list_box_scrollbar = Scrollbar(self.employee_pane)
-		self.employee_list_box = Listbox(self.employee_pane)
+		self.employee_list_box = Listbox(self.employee_pane, selectmode=MULTIPLE, yscrollcommand=self.employee_list_box_scrollbar.set)
+		self.employee_list_box.bind('<<ListboxSelect>>', self.listbox_callback)
+		# Populate Listbox from Database
 		self.populate_employee_list_box()
+		self.employee_list_box_scrollbar.config(command=self.employee_list_box.yview)
 		self.employee_list_box_scrollbar.pack(side='right', fill=Y)
 		self.employee_list_box.pack(fill='both', expand=1)
 
@@ -96,7 +99,7 @@ class MainApp(tk.Frame):
 		self.label_student_id = Label(self.employee_info_labels_pane, text="Student ID", anchor='w', width=16)
 		self.label_full_name = Label(self.employee_info_labels_pane, text="Name", anchor='w', width=16)
 		self.label_email = Label(self.employee_info_labels_pane, text="Email", anchor='w', width=16)
-		self.label_phone_number = Label(self.employee_info_labels_pane, text="PHone Number", anchor='w', width=16)
+		self.label_phone_number = Label(self.employee_info_labels_pane, text="Phone Number", anchor='w', width=16)
 		self.label_job_type = Label(self.employee_info_labels_pane, text="Position", anchor='w', width=16)
 		self.label_date_hired = Label(self.employee_info_labels_pane, text="Hire Date", anchor='w', width=16)
 		self.label_date_graduate = Label(self.employee_info_labels_pane, text="Graduation Date", anchor='w', width=16)
@@ -115,7 +118,7 @@ class MainApp(tk.Frame):
 
 		# StringVars for each field, will change depending on active/current listbox selection
 		self.employee_id = StringVar()
-		self.employee_id = None
+		self.employee_id.set(self.all_employee_list[self.employee_list_index])
 		self.employee_name = StringVar()
 		self.employee_name = None
 		self.employee_email = StringVar()
@@ -168,12 +171,18 @@ class MainApp(tk.Frame):
 		###################
 
 	def populate_employee_list_box(self):
-		employee_list = self.database_handler.get_employee_list()
-		for e in employee_list:
-			print(e.personal_information.name_first)
-		for employee in employee_list:
+		self.all_employee_list = self.database_handler.get_employee_list()
+		for employee in all_employee_list:
 			self.employee_list_box.insert(END, employee.personal_information.name_first+" "+employee.personal_information.name_last+" - "+employee.personal_information.student_id)
 		# Packed in __init__()
+
+	def listbox_callback(self, event):
+		widget = event.widget
+		index = int(widget.curselection()[len(widget.curselection())-1])
+		value = widget.get(index)
+		self.employee_list_index = index
+		print("index: "+str(index)+" value: "+value)
+
 
 root = tk.Tk()
 root.wm_title("Scheduler")

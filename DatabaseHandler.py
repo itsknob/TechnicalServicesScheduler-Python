@@ -134,32 +134,33 @@ class DatabaseHandler:
 		employee_query = "select * from employees"
 		employee_list = list()
 		training_list = list()
-		p = PersonalInformation()
-		w = WorkInformation()
 		cur = self.cur
 		cur.row_factory = sqlite3.Row
-		for row in cur.execute(employee_query):
+		cur.execute(employee_query)
+		rows = cur.fetchall()
+		for row in rows:
+			p = PersonalInformation()
+			w = WorkInformation()
 			# Employee Information
-			p.student_id = row['student_id']
-			p.name_first = row['employee_name_first']
-			p.name_last = row['employee_name_last']
-			p.email = row['employee_email']
-			p.phone_number = row['employee_phone_number']
-			w.job_type = row['employee_job_type']
-			w.date_hire = row['employee_date_hire']
-			w.date_graduate = row['employee_date_graduate']
-			w.shirt_size = row['employee_shirt_size']
-			w.note = row['employee_notes']
+			p.student_id = str(row['student_id'])
+			p.name_first = str(row['employee_name_first'])
+			p.name_last = str(row['employee_name_last'])
+			p.email = str(row['employee_email'])
+			p.phone_number = str(row['employee_phone_number'])
+			w.job_type = str(row['employee_job_type'])
+			w.date_hire = str(row['employee_date_hire'])
+			w.date_graduate = str(row['employee_date_graduate'])
+			w.shirt_size = str(row['employee_shirt_size'])
+			w.note = str(row['employee_notes'])
 
 			# Training Information to initialize new employee
-			training_query = "select * from trainings where student_id="+row['student_id']
+			training_query = "select * from trainings where student_id="+str(row['student_id'])
 			cur.execute(training_query)
 			training_list = cur.fetchone()
 			# Initialize Employee
 			s = Employee(p, w, training_list)
 			employee_list.append(s)
 
-		print(employee_list)
 		return employee_list
 
 """
