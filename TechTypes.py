@@ -14,6 +14,32 @@ class EmployeeType(Enum):
 
 class PersonalInformation:
 
+
+    # Currently Not Fucntioning
+    def fix_email(self, email):
+        """Add More Quotes Around word before period after the at symbol"""
+        first, second = email.split("@")
+        print("First: " + first + ", Second: " + second)
+        email = first+"\\"+second    # email should be <address>@'<domain>.<tld>
+        print(email)
+
+        email_reversed = email[::-1]
+        first, second = email_reversed.split(".")
+        email_reversed = first+"\\"+second    # email should be <dlt>.'<niamod>'@<sserdda>
+        print(email_reversed)
+
+        email = email_reversed[::-1]
+        print(email)
+
+        return email
+
+    @property
+    def student_id(self):
+        return self._student_id
+    @student_id.setter
+    def student_id(self, new_id):
+        self._student_id = new_id
+
     @property
     def name_first(self):
         return self._name_first
@@ -33,6 +59,7 @@ class PersonalInformation:
         return self._email
     @email.setter
     def email(self, new_email):
+        new_email = self.fix_email(new_email)
         self._email = new_email
 
     @property
@@ -44,13 +71,6 @@ class PersonalInformation:
 
 
 class WorkInformation:
-
-    @property
-    def student_id(self):
-        return self._student_id
-    @student_id.setter
-    def student_id(self, new_id):
-        self._student_id = new_id
 
     @property
     def job_type(self):
@@ -88,7 +108,7 @@ class WorkInformation:
         self._notes = new_notes
 
 
-class Student:
+class Employee:
     """
     Contains Personal and Work-related information about the student
 
@@ -109,6 +129,7 @@ class Student:
 
     def get_personal_info_as_list(self):
         personal_info_list = list()
+        personal_info_list.append(self.personal_information.student_id)
         personal_info_list.append(self.personal_information.name_first)
         personal_info_list.append(self.personal_information.name_last)
         personal_info_list.append(self.personal_information.email)
@@ -137,83 +158,87 @@ class Event:
     """Holds information about Events"""
 
     def __init__(self, name, location, date, start_time, end_time, number_employees, req_manager):
-        self.event_name = name
-        self.event_location = location
-        self.event_date = date
-        self.event_start_time = start_time
-        self.event_end_time = end_time
-        self.event_number_employees = number_employees
-        self.event_req_manager = req_manager
+        self._event_name = name
+        self._event_location = location
+        self._event_date = date
+        self._event_start_time = start_time
+        self._event_end_time = end_time
+        self._event_number_employees = number_employees
+        self._event_requires_manager = req_manager
+
+        self._event_employee_list = list()
+        self._event_manager = None
+
 
     # "Getters/Setters" - Required Attributes
     @property
     def event_name(self):
         """Name of Event"""
-        return self.event_name
+        return self._event_name
     @event_name.setter
     def event_name(self, new_name):
-        self.event_name = new_name
+        self._event_name = new_name
 
     @property
     def event_location(self):
-        return self.event_location
+        return self._event_location
     @event_location.setter
     def event_location(self, new_location):
-        self.event_location = new_location
+        self._event_location = new_location
 
     @property
     def event_date(self):
-        return self.event_date
+        return self._event_date
     @event_date.setter
     def event_date(self, new_date):
-        self.event_date = new_date
+        self._event_date = new_date
 
     @property
     def event_start_time(self):
-        return self.event_start_time
+        return self._event_start_time
     @event_start_time.setter
     def event_start_Time(self, new_start_time):
-        self.event_start_time = new_start_time
+        self._event_start_time = new_start_time
 
     @property
     def event_end_time(self):
-        return self.event_end_time
+        return self._event_end_time
     @event_end_time.setter
     def event_end_time(self, new_end_time):
-        self.event_end_time = new_end_time
+        self._event_end_time = new_end_time
 
     @property
     def event_number_employees(self):
-        return self.event_number_employees
+        return self._event_number_employees
     @event_number_employees.setter
     def event_number_employees(self, new_number):
-        self.event_number_employees = new_number
+        self._event_number_employees = new_number
 
     @property
     def event_requires_manager(self):
-        return self.event_requires_manager
+        return self._event_requires_manager
     @event_requires_manager.setter
     def event_requires_manager(self, new_requires):
-        self.event_requires_manager = new_requires
+        self._event_requires_manager = new_requires
 
     # "Getters/Setters" - Additional Attributes
     @property
     def event_employee_list(self):
-        return self.event_employee_list
+        return self._event_employee_list
     @event_employee_list.setter
     def event_employee_list(self, new_employee_list):
-        self.event_employee_list = new_employee_list
+        self._event_employee_list = new_employee_list
 
     @property
     def event_manager(self):
-        return self.event_manager
+        return self._event_manager
     @event_manager.setter
     def event_manager(self, new_manager):
-        self.event_manager = new_manager
+        self._event_manager = new_manager
 
     # Event Methods
-    def add_employee_to_event(self, employee=Student):
+    def add_employee_to_event(self, employee=Employee):
         self.event_employee_list.append(employee)
 
-    def remove_employee_from_event(self, employee=Student):
+    def remove_employee_from_event(self, employee=Employee):
         self.event_employee_list.remove(employee)

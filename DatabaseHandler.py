@@ -1,4 +1,4 @@
-"""Student Handler Refactor"""
+"""Employee Handler Refactor"""
 import sqlite3
 import os.path
 from TechTypes import *
@@ -6,6 +6,9 @@ from TechTypes import *
 
 class DatabaseHandler:
 
+	# Fields 
+	employee_fields = "(student_id, employee_name_first, employee_name_last, employee_email, employee_phone_number, employee_job_type, employee_date_hire, employee_date_graduate, employee_shirt_size, employee_notes)"
+	training_fields = "(student_id, mobile_sound, mobile_lights, auditorium_sound, auditorium_lights, stage_safety, commuter_cafe, woodland_commons, grand_reading_room, professionalism, x32, sound_consoles, sound_design, amp_speaker_matching, advanced_ion, lighting_design, networking, scenery_shop)"
 	# May be moved elsewhere to be used as a first-run setup. IE __init__.py
 	def __init__(self):
 		# Config file exists
@@ -77,15 +80,15 @@ class DatabaseHandler:
 
 	def create_tables(self):
 		self.con.execute("""create table if not exists employees (student_id varchar(8) primary key,
-											student_name_first varchar(32),
-											student_name_last varchar(32),
-											student_job_type varchar(8),
-											student_phone_number integer,
-											student_email varchar(64),
-											student_date_hire date,
-											student_date_graduate date,
-											student_shirt_size varchar(4),
-											student_notes varchar(255))""")
+											employee_name_first varchar(32),
+											employee_name_last varchar(32),
+											employee_email varchar(64),
+											employee_phone_number integer,
+											employee_job_type varchar(8),
+											employee_date_hire date,
+											employee_date_graduate date,
+											employee_shirt_size varchar(4),
+											employee_notes varchar(255))""")
 		self.con.execute("""create table if not exists trainings (student_id varchar(8) primary key,
 											mobile_sound integer,
 											mobile_lights integer,
@@ -114,24 +117,64 @@ class DatabaseHandler:
 		cursor = connection.cursor()
 		return connection, cursor
 
-	def add_new_student(self, new_student=Student):
-		student_info_list = new_student.return_all_info_as_list()
-		print(student_info_list)
+	def add_new_employee(self, new_employee=Employee):
+		employee_info_list = new_employee.return_all_info_as_list()
+		employee_info_string = str()
+		for item in employee_info_list:
+			employee_info_string += str(item)+", "
+		# Strip trailing comma and space
+		employee_info_string = employee_info_string[:-2]
+		query = "insert into employees "+self.employee_fields+" values ("+employee_info_string+")"
+		print(query)
+		self.con.execute(query)
+		self.con.commit()
+
+	def get_employee_list(self):
+		employee_query = "select * from employees"
+		employee_list = list()
+		training_list = list()
+		p = PersonalInformation()
+		w = WorkInformation()
+		cur = self.cur
+		cur.row_factory = sqlite3.Row
+		for row in cur.execute(employee_query):
+			# Employee Information
+			p.student_id = row['student_id']
+			p.name_first = row['employee_name_first']
+			p.name_last = row['employee_name_last']
+			p.email = row['employee_email']
+			p.phone_number = row['employee_phone_number']
+			w.job_type = row['employee_job_type']
+			w.date_hire = row['employee_date_hire']
+			w.date_graduate = row['employee_date_graduate']
+			w.shirt_size = row['employee_shirt_size']
+			w.note = row['employee_notes']
+
+			# Training Information to initialize new employee
+			training_query = "select * from training where student_id="+row['student_id']
+			cur.execute(training_query)
+			training_list = cur.fetchone()
+			# Initialize Employee
+			s = Employee(p, w, training_list)
+			employee_list.append(s)
+
 
 p = PersonalInformation()
+p.student_id = "01358308"
 p.name_first = "Stephen"
 p.name_last = "Reilly"
 p.email = "stephencreilly7@gmail.com"
 p.phone_number = "9788688473"
 w = WorkInformation()
-w.student_id = "01358308"
 w.job_type = EmployeeType.MANAGER
 w.date_hire = "2013-04-01"
 w.date_graduate = "2017-05-13"
 w.shirt_size = "L"
 w.notes = "Great Employee"
 t = {"training_aud_sound": True, "training_aud_lights": True, "training_mobile_sound": True, "training_mobile_lights": True, "training_stage_safety": True, "training_commuter_cafe": True, "training_woodland_commons": True, "training_grand_reading_room": True, "training_professionalism": True, "training_x32": True, "training_sound_consoles": True, "training_sound_design": True, "training_amp_speaker_matching": True, "training_advanced_ion": True, "training_lighting_design": True, "training_networking": True, "training_equiptment_repair": True, "training_scenery_shop": True}
-s = Student(p, w, t)
+s = Employee(p, w, t)
 
 d = DatabaseHandler()
-d.add_new_student(s)
+d.add_new_employee(s)
+
+email = p.fix_email(p.email)
