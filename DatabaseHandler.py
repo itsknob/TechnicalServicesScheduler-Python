@@ -121,10 +121,11 @@ class DatabaseHandler:
 		employee_info_list = new_employee.return_all_info_as_list()
 		employee_info_string = str()
 		for item in employee_info_list:
-			employee_info_string += str(item)+", "
+			employee_info_string += "\'"+str(item)+"\', "
 		# Strip trailing comma and space
 		employee_info_string = employee_info_string[:-2]
-		query = "insert into employees "+self.employee_fields+" values ("+employee_info_string+")"
+		print(employee_info_string)
+		query = "insert into employees"+self.employee_fields+" values ("+employee_info_string+")"
 		print(query)
 		self.con.execute(query)
 		self.con.commit()
@@ -159,6 +160,8 @@ class DatabaseHandler:
 			employee_list.append(s)
 
 
+d = DatabaseHandler()
+
 p = PersonalInformation()
 p.student_id = "01358308"
 p.name_first = "Stephen"
@@ -172,9 +175,6 @@ w.date_graduate = "2017-05-13"
 w.shirt_size = "L"
 w.notes = "Great Employee"
 t = {"training_aud_sound": True, "training_aud_lights": True, "training_mobile_sound": True, "training_mobile_lights": True, "training_stage_safety": True, "training_commuter_cafe": True, "training_woodland_commons": True, "training_grand_reading_room": True, "training_professionalism": True, "training_x32": True, "training_sound_consoles": True, "training_sound_design": True, "training_amp_speaker_matching": True, "training_advanced_ion": True, "training_lighting_design": True, "training_networking": True, "training_equiptment_repair": True, "training_scenery_shop": True}
-s = Employee(p, w, t)
+e = Employee(p, w, t)
 
-d = DatabaseHandler()
-d.add_new_employee(s)
-
-email = p.fix_email(p.email)
+d.add_new_employee(e)

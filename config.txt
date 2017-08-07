@@ -1,1 +1,1 @@
-database:test1.db
+database:test.db

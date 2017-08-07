@@ -14,25 +14,6 @@ class EmployeeType(Enum):
 
 class PersonalInformation:
 
-
-    # Currently Not Fucntioning
-    def fix_email(self, email):
-        """Add More Quotes Around word before period after the at symbol"""
-        first, second = email.split("@")
-        print("First: " + first + ", Second: " + second)
-        email = first+"\\"+second    # email should be <address>@'<domain>.<tld>
-        print(email)
-
-        email_reversed = email[::-1]
-        first, second = email_reversed.split(".")
-        email_reversed = first+"\\"+second    # email should be <dlt>.'<niamod>'@<sserdda>
-        print(email_reversed)
-
-        email = email_reversed[::-1]
-        print(email)
-
-        return email
-
     @property
     def student_id(self):
         return self._student_id
@@ -59,9 +40,9 @@ class PersonalInformation:
         return self._email
     @email.setter
     def email(self, new_email):
-        new_email = self.fix_email(new_email)
+        #self._email = "\'"+new_email+"\'"
         self._email = new_email
-
+        
     @property
     def phone_number(self):
         return self._phone_number
