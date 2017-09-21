@@ -84,6 +84,9 @@ class MainApp(tk.Frame):
 		self.employee_list_box_scrollbar.config(command=self.employee_list_box.yview)
 		self.employee_list_box_scrollbar.pack(side='right', fill=Y)
 		self.employee_list_box.pack(fill='both', expand=1)
+		# Variables required to have selection order in listbox
+		self.old_selection_list = ist() # Previously Selected in Listbox
+		self.selected_list = list()	# Currently Selected in Listbox
 
 		#############
 		# Create Area to show employee information
@@ -182,6 +185,31 @@ class MainApp(tk.Frame):
 		value = widget.get(index)
 		self.employee_list_index = index
 		print("index: "+str(index)+" value: "+value)
+
+	def list_callback(self, event):
+		widget = event.widget
+		new_selection_list = list()
+
+		for item in widget.curselection():
+			# This is the selected item in the list box, mostly used for size comparison
+			new_selection_list.append(item)
+
+		# Required for checking addition or removal to/from listbox
+		new_selection_size = len(new_selection_list)
+		old_selection_size = len(self.old_selection_list) # Starts at 0
+
+		# If new selection
+		if new_size > old_size:
+			self.addListItem(new_selection_list)
+		# If selection removed
+		elif new_size < old_size:
+			self.removeListItem(new_selection_list)
+		# Error
+		else:
+			print("Error - No change in list selection")
+
+		# Set new to old
+		self.old_selection_list = self.selected_list
 
 
 root = tk.Tk()
