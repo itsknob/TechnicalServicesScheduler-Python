@@ -106,7 +106,7 @@ class Employee:
         self.trainings_completed = trainings
 
     def get_full_name(self):
-        return self.personal_information.name_first.append(" " + self.personal_information.name_last)
+        return self.personal_information.name_first + " " + self.personal_information.name_last
 
     def get_personal_info_as_list(self):
         personal_info_list = list()

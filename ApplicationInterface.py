@@ -50,8 +50,6 @@ class MainApp(tk.Frame):
 		self.button6 = Button(self.event_pane, text="test6")
 		self.button6.pack()
 
-
-
 		# Employee List
 		# Pane to display Employee List
 		self.employee_list_schedule_pane = PanedWindow(self.schedule_tab)
@@ -85,7 +83,7 @@ class MainApp(tk.Frame):
 		self.employee_list_box_scrollbar.pack(side='right', fill=Y)
 		self.employee_list_box.pack(fill='both', expand=1)
 		# Variables required to have selection order in listbox
-		self.old_selection_list = ist() # Previously Selected in Listbox
+		self.old_selection_list = list() # Previously Selected in Listbox
 		self.selected_list = list()	# Currently Selected in Listbox
 
 		#############
@@ -121,36 +119,38 @@ class MainApp(tk.Frame):
 
 		# StringVars for each field, will change depending on active/current listbox selection
 		self.employee_id = StringVar()
-		self.employee_id.set(self.all_employee_list[self.employee_list_index])
+		# self.employee_id.set("Test")
+		# self.employee_id = None
+		# self.employee_id.set(self.all_employee_list[self.employee_list_index])
 		self.employee_name = StringVar()
-		self.employee_name = None
+		# self.employee_name = None
 		self.employee_email = StringVar()
-		self.employee_email = None
+		# self.employee_email = None
 		self.employee_phone = StringVar()
-		self.employee_phone = None
+		# self.employee_phone = None
 		self.employee_job = StringVar()
-		self.employee_job = None
+		# self.employee_job = None
 		self.employee_hired = StringVar()
-		self.employee_hired = None
+		# self.employee_hired = None
 		self.employee_graduate = StringVar()
-		self.employee_graduate = None
+		# self.employee_graduate = None
 		self.employee_size = StringVar()
-		self.employee_size = None
+		# self.employee_size = None
 		self.employee_notes = StringVar()
-		self.employee_notes = None
+		# self.employee_notes = None
 
 		self.employee_info_data_pane = LabelFrame(self.employee_information_pane)
 		self.employee_info_data_pane.pack(fill='x', expand=1, side='right')
 
-		self.data_student_id = Label(self.employee_info_data_pane, text=self.employee_id)
-		self.data_full_name = Label(self.employee_info_data_pane, text=self.employee_name)
-		self.data_email = Label(self.employee_info_data_pane, text=self.employee_email)
-		self.data_phone_number = Label(self.employee_info_data_pane, text=self.employee_phone)
-		self.data_job_type = Label(self.employee_info_data_pane, text=self.employee_job)
-		self.data_date_hired = Label(self.employee_info_data_pane, text=self.employee_hired)
-		self.data_date_graduate = Label(self.employee_info_data_pane, text=self.employee_graduate)
-		self.data_shirt_size = Label(self.employee_info_data_pane, text=self.employee_size)
-		self.data_notes = Label(self.employee_info_data_pane, text=self.employee_notes)
+		self.data_student_id = Label(self.employee_info_data_pane, text=self.employee_id.get())
+		self.data_full_name = Label(self.employee_info_data_pane, text=self.employee_name.get())
+		self.data_email = Label(self.employee_info_data_pane, text=self.employee_email.get())
+		self.data_phone_number = Label(self.employee_info_data_pane, text=self.employee_phone.get())
+		self.data_job_type = Label(self.employee_info_data_pane, text=self.employee_job.get())
+		self.data_date_hired = Label(self.employee_info_data_pane, text=self.employee_hired.get())
+		self.data_date_graduate = Label(self.employee_info_data_pane, text=self.employee_graduate.get())
+		self.data_shirt_size = Label(self.employee_info_data_pane, text=self.employee_size.get())
+		self.data_notes = Label(self.employee_info_data_pane, text=self.employee_notes.get())
 
 		self.data_student_id.pack()
 		self.data_full_name.pack()
@@ -175,18 +175,20 @@ class MainApp(tk.Frame):
 
 	def populate_employee_list_box(self):
 		self.all_employee_list = self.database_handler.get_employee_list()
-		for employee in all_employee_list:
+		for employee in self.all_employee_list:
 			self.employee_list_box.insert(END, employee.personal_information.name_first+" "+employee.personal_information.name_last+" - "+employee.personal_information.student_id)
 		# Packed in __init__()
 
+	"""
 	def listbox_callback(self, event):
 		widget = event.widget
 		index = int(widget.curselection()[len(widget.curselection())-1])
 		value = widget.get(index)
 		self.employee_list_index = index
 		print("index: "+str(index)+" value: "+value)
+	"""
 
-	def list_callback(self, event):
+	def listbox_callback(self, event):
 		widget = event.widget
 		new_selection_list = list()
 
@@ -199,10 +201,10 @@ class MainApp(tk.Frame):
 		old_selection_size = len(self.old_selection_list) # Starts at 0
 
 		# If new selection
-		if new_size > old_size:
+		if new_selection_size > old_selection_size:
 			self.addListItem(new_selection_list)
 		# If selection removed
-		elif new_size < old_size:
+		elif new_selection_size < old_selection_size:
 			self.removeListItem(new_selection_list)
 		# Error
 		else:
@@ -210,6 +212,39 @@ class MainApp(tk.Frame):
 
 		# Set new to old
 		self.old_selection_list = self.selected_list
+
+		# Change Labels on Display
+		self.data_student_id.config(text=self.all_employee_list[self.old_selection_list[-1]].personal_information.student_id) # Name of Employee who's index is the last item in selected list.
+		self.updateEmployeeLabels()
+
+	def updateEmployeeLabels(self):
+		self.data_student_id.config(text=self.all_employee_list[self.old_selection_list[-1]].personal_information.student_id)
+		self.data_full_name.config(text=self.all_employee_list[self.old_selection_list[-1]].get_full_name())
+		self.data_email.config(text=self.all_employee_list[self.old_selection_list[-1]].personal_information.email)
+		self.data_phone_number.config(text=self.all_employee_list[self.old_selection_list[-1]].personal_information.phone_number)
+		self.data_job_type.config(text=self.all_employee_list[self.old_selection_list[-1]].work_information.job_type)
+		self.data_date_hired.config(text=self.all_employee_list[self.old_selection_list[-1]].work_information.date_hire)
+		self.data_date_graduate.config(text=self.all_employee_list[self.old_selection_list[-1]].work_information.date_graduate)
+		self.data_shirt_size.config(text=self.all_employee_list[self.old_selection_list[-1]].work_information.shirt_size)
+		self.data_notes.config(text=self.all_employee_list[self.old_selection_list[-1]].work_information.notes)
+
+	# When the size of new_selection_list is greater than the size of currently selected.
+	def addListItem(self, new_selection_list):
+		# Go through items in new list
+		for item in new_selection_list:
+			# If item is not in old list, it's new. Add it to the list.
+			if item not in self.old_selection_list:
+				self.selected_list.append(item)
+			# Otherwise item is in old list, it was already selected.
+
+	# When the size of new_selection_list is less than the size of currently selected.
+	def removeListItem(self, new_selection_list):
+		# Go through items in old list
+		for item in self.old_selection_list:
+			# If item is not in new list, it's been removed.
+			if item not in new_selection_list:
+				self.selected_list.remove(item)
+			# Otherwise item is in new list, it is still selected.
 
 
 root = tk.Tk()
