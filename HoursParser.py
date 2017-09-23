@@ -1,5 +1,6 @@
-from TechStuff import Event
+from TechTypes import Event
 import re
+import datetime
 
 class FileParser:
     """
@@ -53,6 +54,22 @@ class FileParser:
                     location = content
                     new_event.append(content)
                     # print(location)
+
+                    # Handle Date {Current Format: Thursday, April 20th, 2017}
+                    weekday, month_and_day, year = date.split(', ')
+                    year = year.strip()
+                    month, day = month_and_day.split() # Separates on space
+                    day = day[:-2] # Remove 'th', 'st', 'nd'
+                    if len(day) == 1:   # Pad with a 0 for datetime formatting
+                        day = "0" + day
+                    # Put it back together?
+                    date_string = weekday + " " + month + " " + day + " " + year
+                    # Format is ("%A %B %d %Y")
+                    date_object = datetime.datetime.strptime(date_string, "%A %B %d %Y")
+                    date_object = datetime.datetime.strftime(date_object, "%A %B %d %Y")
+
+                    new_event.append(date_object)
+
                 elif tag == "Time":
                     # Split into separate times.
                     start_time, end_time = content.split(sep='â€“', maxsplit=1)
@@ -95,10 +112,16 @@ class FileParser:
                 new_event[i] = new_event[i][1:]
 
         # Create Events and place into an array
-        while len(new_event) >= 5:
-            e = Event(new_event[0], new_event[1], None, new_event[2], new_event[3], new_event[4], False)
-            new_event = new_event[5:]
+        while len(new_event) >= 6:
+            e = Event(new_event[0], new_event[1], new_event[2], new_event[3], new_event[4], new_event[5], False)
+            new_event = new_event[6:]
             event_list.append(e)
 
         # Event Object List
         return event_list
+
+if __name__ == "__main__":
+    fp = FileParser()
+    fp.choose_file()
+    testlist = fp.parse_file()
+    # Put Print Statements Below for Debugging

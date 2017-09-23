@@ -214,11 +214,10 @@ class MainApp(tk.Frame):
 		self.old_selection_list = self.selected_list
 
 		# Change Labels on Display
-		self.data_student_id.config(text=self.all_employee_list[self.old_selection_list[-1]].personal_information.student_id) # Name of Employee who's index is the last item in selected list.
 		self.updateEmployeeLabels()
 
 	def updateEmployeeLabels(self):
-		self.data_student_id.config(text=self.all_employee_list[self.old_selection_list[-1]].personal_information.student_id)
+		self.data_student_id.config(text=self.all_employee_list[self.old_selection_list[-1]].personal_information.student_id) # Name of Employee who's index is the last item in selected list.
 		self.data_full_name.config(text=self.all_employee_list[self.old_selection_list[-1]].get_full_name())
 		self.data_email.config(text=self.all_employee_list[self.old_selection_list[-1]].personal_information.email)
 		self.data_phone_number.config(text=self.all_employee_list[self.old_selection_list[-1]].personal_information.phone_number)

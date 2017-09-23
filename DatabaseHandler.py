@@ -151,7 +151,7 @@ class DatabaseHandler:
 			w.date_hire = str(row['employee_date_hire'])
 			w.date_graduate = str(row['employee_date_graduate'])
 			w.shirt_size = str(row['employee_shirt_size'])
-			w.note = str(row['employee_notes'])
+			w.notes = str(row['employee_notes'])
 
 			# Training Information to initialize new employee
 			training_query = "select * from trainings where student_id="+str(row['student_id'])
