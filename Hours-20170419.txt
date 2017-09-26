@@ -14,7 +14,7 @@ Staff: 1 Person
 Title: Makeup Accepted Students Day
 Venue: Aud
 Time: 9:30 AM – 3 PM
-Staff: 1 Student
+Staff: 1 Person
 
 Title: Sigma Xi
 Venue: Living Room
