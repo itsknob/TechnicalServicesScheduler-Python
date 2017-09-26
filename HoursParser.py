@@ -63,30 +63,65 @@ class FileParser:
                     if len(day) == 1:   # Pad with a 0 for datetime formatting
                         day = "0" + day
                     # Put it back together?
-                    date_string = weekday + " " + month + " " + day + " " + year
+                    date_string = month + " " + day + " " + year
                     # Format is ("%A %B %d %Y")
-                    date_object = datetime.datetime.strptime(date_string, "%A %B %d %Y")
-                    date_object = datetime.datetime.strftime(date_object, "%A %B %d %Y")
+                    date_object = datetime.datetime.strptime(date_string, "%B %d %Y")
+                    date_object = datetime.datetime.strftime(date_object, "%B %d %Y")
 
                     new_event.append(date_object)
 
                 elif tag == "Time":
                     # Split into separate times.
                     start_time, end_time = content.split(sep='â€“', maxsplit=1)
-
                     # Format Each String
                     start_string = str(start_time)
                     space, start_string1, start_string2 = start_string.split(" ", maxsplit=2)
 
+                    # Format shifts after 12 to 24 hours
+                    if start_string2.find("PM") != -1:
+                        # Starts on the hour
+                        if len(start_string1) == 1 or len(start_string1) == 2 or len(start_string1) == 3:
+                            start_string1 = str(int(start_string1) + 12)
+                        elif len(start_string1) > 3:
+                            hour, mins = start_string1.split(':')
+                            hour = str(int(hour) + 12)
+                            start_string1 = hour+':'+mins
+
                     end_string = str(end_time)
                     space, end_string1, end_string2 = end_string.split(" ", maxsplit=2)
+
+                    # Format shifts after 12 to 24 hours
+                    if end_string2.find("PM") != -1:
+                        # On the hour
+                        if len(end_string1) == 1 or len(end_string1) == 2 or len(end_string1) == 3:
+                            end_string1 = str(int(end_string1) + 12)
+                            print(end_string1)
+                        elif len(end_string1) > 3:
+                            hour, mins = end_string1.split(':')
+                            hour = str(int(hour) + 12)
+                            end_string1 = hour+':'+mins
+                            print(end_string1)
+
+                    if len(start_string1) == 2:
+                        start_string1 = start_string1 + ":00"
+                    if len(start_string1) == 1:
+                        start_string1 = "0" + start_string1 + ":00"
+                    if len(start_string1) == 4:
+                        start_string1 = "0" + start_string1
+                    if len(end_string1) == 2:
+                        end_string1 = end_string1 + ":00"
+                    if len(end_string1) == 1:
+                        end_string1 = "0" + end_string1 + ":00"
+                    if len(end_string1) == 4:
+                        end_string1 = "0" + end_string1
+
 
                     new_event.append(start_string1)
                     new_event.append(end_string1)
                 elif tag == "Staff":
-                    num_employees = content[:-6]
-                    # print(num_employees)
-                    new_event.append(content[:-6])
+                    num_employees, units = content.split()
+                    #print(num_employees)
+                    new_event.append(num_employees)
 
                     '''
                     e = Event(name, location, date, start_string1, end_string1, num_employees, False)
@@ -125,3 +160,6 @@ if __name__ == "__main__":
     fp.choose_file()
     testlist = fp.parse_file()
     # Put Print Statements Below for Debugging
+    for event in testlist:
+        print("test_event{6} = Event(\"{0}\", \"{1}\", \"{2}\", \"{3}\", \"{4}\", \"{5}\", False)".format(event.event_name, event.event_location, event.event_date, event.event_start_time, event.event_end_time, event.event_number_employees, testlist.index(event)+1))
+        print()

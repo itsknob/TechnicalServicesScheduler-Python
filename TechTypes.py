@@ -178,7 +178,7 @@ class Event:
     def event_start_time(self):
         return self._event_start_time
     @event_start_time.setter
-    def event_start_Time(self, new_start_time):
+    def event_start_time(self, new_start_time):
         self._event_start_time = new_start_time
 
     @property
