@@ -8,8 +8,8 @@ class MyApp:
 	def __init__(self, master=None):
 		self.master = master
 
-		self.master.minsize(width=1000, height=600)
-		self.master.maxsize(width=1000, height=600)
+		self.master.minsize(width=0, height=900)
+		self.master.maxsize(width=1600, height=900)
 
 		# MainFrame
 		self.master_frame = Frame().pack()
@@ -58,8 +58,12 @@ class MyApp:
 		self.master_canvas.bind_all('<Button-5>', on_mousewheel)
 
 		# Width Variables
-		self.label_width = 16
-		self.button_width = 16
+		self.widget_height = 2
+		self.label_width = 24
+		self.button_width = 24
+		self.half_button_width = 12
+		self.third_button_width = 8
+		self.quarter_button_width = 6
 
 		tuple_list = list()
 		event_list = list()
@@ -137,16 +141,16 @@ class MyApp:
 				
 				# Create Labels for Days
 				if row is 0:
-					Label(self.weekly_view_frame, text=days[column], width=self.label_width, borderwidth=2).grid(row=row, column=column)	
+					Label(self.weekly_view_frame, text=days[column], width=self.label_width, height=self.widget_height, borderwidth=0).grid(row=row, column=column)	
 				# Create Buttons for everything else.
 				else:
 					# Label Times in Leftmost Column
 					if column is 0:
-						Label(self.weekly_view_frame, text=times[row], width=self.label_width, borderwidth=2).grid(row=row, column=column)
+						Label(self.weekly_view_frame, text=times[row], width=self.label_width, height=self.widget_height, borderwidth=0).grid(row=row, column=column)
 					# Label Grid Location from (1, 1) to (47, 7)
 					else:
 						#Frame(self.weekly_view_frame, width=self.label_width, borderwidth=2, background="red").grid(row=row, column=column)
-						Label(self.weekly_view_frame, text="R-%s, C-%s"%(row, column), width=self.label_width, borderwidth=2).grid(row=row, column=column)
+						Label(self.weekly_view_frame, text="R-%s, C-%s"%(row, column), width=self.label_width, height=self.widget_height, borderwidth=0).grid(row=row, column=column)
 															#, command=lambda r=row, c=column: print("%s, %s"%(r, c))
 
 		# Generate list of slaves from newly created calendar view.
@@ -207,19 +211,39 @@ class MyApp:
 								# 		if row == r_start and column == c_start:		#
 						else: 
 
+
+							"""
+							rowspan = r_end - r_start # At least 1 (30 minutes)
+
+							# Remove Widgets in locations event button will be placed
+							slaves = self.weekly_view_frame.grid_slaves()
+							self.removeWidgets(r_start, r_end, column, rowspan, slaves)
+
+							# There is an event here, we want to create a Button using rowspan
+							Button(self.weekly_view_frame, text=event_list[tuple_list.index(outer_tuple)].event_name, width=self.button_width, wraplength=128, justify="left", command=lambda t=event_list[tuple_list.index(outer_tuple)].event_name: print(t)).grid(row=r_start, column=c_start, rowspan=rowspan, sticky="NS")
+							print("Placed Button for {3:.16} at: ({0}, {1}) with a span of: {2}".format(row, column, rowspan, event_list[tuple_list.index(outer_tuple)].event_name))
+							# RE-Generate list of slaves from newly created calendar view.
+							slaves = self.weekly_view_frame.grid_slaves()
+							"""
+
+
+
 							#print("############### r_start: {0}, r_end: {1}, c_start: {2} ###############".format(r_start, r_end, c_start))
 							# This is starting at the beginning of button to be placed.
 							# So if there is a button, that already exists, where this button is about to be placed
 							# We need to create the frame from the button that already exists or the one being place, which ever is ealier.
 							for this_object in slaves:
-
-								# Check to see if there is a frame with multiple buttons first, 				(|           Frame          |)
+								# Check to see if there is a frame with multiple buttons first, 			
+								#																			(|           Frame          |)
 								# if there's multiple buttons,												(|   Frame     |   Frame    |)
 									# put that two button frame AND a frame for the button into a new frame (| Event| Event|   Event    |)
 								#
-								# otherwise keep going with this code.           
+								# otherwise keep going with this code.
+								if type(this_object) is Frame:
+									print("#####Frame")
 
 								if type(this_object) is Button:	# this_object is a Button that already exists, we're about to place another.
+									print("##Button")
 									old_button = this_object
 									old_button_info = old_button.grid_info()
 									# If button exists where this other button already is is
@@ -237,41 +261,39 @@ class MyApp:
 											print("\t\tNew Event Starts Ealier")
 											# Find out which one ends later, use this to create a frame of rowspan of difference
 											new_frame_start = r_start # Friendly Name for frame that will be created.
-											# New Event ends ealier (shorter)
+
+											# New Event ends ealier (shorter) - Use Old Event ending
 											if r_end < old_button_info['row']+old_button_info['rowspan']:
-												# Use Old Event ending
 												new_frame_end = old_button_info['row']+old_button_info['rowspan']
-												# Create Frame to put both events in.
 												print("Old longer")
+											
 											# New Event ends later or equal (longer, or same length)
 											else:
 												new_frame_end = r_end
 												print("New Longer")
-												# Create Frame to put both events in
-											# Create Frame to put both event in
-												# Remove widgets from spaces where
+
+											# Calculate Frame Span
 											new_frame_rowspan = new_frame_end - new_frame_start
-											print("CREATING NEW FRAME from: r - {0} to r - {1}".format(new_frame_start, new_frame_end))
+
+											# Create Frame to put both event in and Remove widgets from spaces where
+											print("CREATING NEW FRAME from: r - {0} to r - {1} @ c - {2}".format(new_frame_start, new_frame_end, c_start))
 											print("c_start", c_start)
-											print("Removing widgets")
 											self.removeWidgets(new_frame_start, new_frame_end, c_start, new_frame_rowspan, slaves)
 											# Create Frame where widgets were removed from
-											self.two_event_frame = Frame(self.weekly_view_frame, width=self.label_width, borderwidth=2)# .grid(row=new_frame_start, column=c_start, rowspan=new_frame_rowspan)
+											self.two_event_frame = Frame(self.weekly_view_frame, width=self.button_width-2, borderwidth=1, relief="groove")# .grid(row=new_frame_start, column=c_start, rowspan=new_frame_rowspan)
 											# Old Event
-											first_button = Button(self.two_event_frame, text="testing left", width=int(self.label_width/2)).grid(row=old_button_info['row'], column=c_start, rowspan=old_button_info['rowspan'], sticky="w")
+											first_button = Button(self.two_event_frame, text="testing left", width=self.half_button_width-1).grid(row=old_button_info['row'], column=c_start, rowspan=old_button_info['rowspan'], sticky="NS")
 											# New Event
-											second_button = Button(self.two_event_frame, text="testing right", width=int(self.label_width/2)).grid(row=new_frame_start, column=c_start+1, rowspan=new_frame_rowspan, sticky="e")
+											second_button = Button(self.two_event_frame, text="testing right", width=self.half_button_width-1).grid(row=new_frame_start, column=c_start+1, rowspan=new_frame_rowspan, sticky="NS")
 
-																			# Commentin out this grid call prints buttons to window.
-											self.two_event_frame.grid()#row=new_frame_start, column=c_start, rowspan=new_frame_rowspan, sticky="ns")
+																			# Commenting out this grid call prints buttons to window.
+											self.two_event_frame.grid(row=new_frame_start, column=c_start, rowspan=new_frame_rowspan, sticky="ns")
 
-
+											# Remake slaves now that it's changed.
 											slaves = self.weekly_view_frame.grid_slaves()
-											print("\#")
-											print("\#")
-											print("\#")
-											'''second_button = Button(two_event_frame, text="testing right")
-											second_butotn.grid(row=0, column=1, sticky="ns")'''
+											
+											# Break out of slaves loop.
+											#break
 
 										# Old Event Starts Earlier
 										elif r_start > old_button_info['row']: # Never Happens because we're looping by day then by time.
